@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 
 // NOTICE: Other components depend on MySQL such as:
+// user/userDAL.js
 class MySQL {
   /**
    * @param {string} host 
