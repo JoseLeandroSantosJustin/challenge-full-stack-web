@@ -47,6 +47,12 @@ describe('Unit test user/User', function() {
         }, Error, 'User must have an email');
       });
 
+      it('If email an empty object', function() {
+        assert.throws(() => {
+          new User(94, {}, 'password');
+        }, Error, 'User must have an email');
+      });
+
       it('If password is empty', function() {
         assert.throws(() => {
           new User(94, 'teste@teste.com', '');
@@ -62,6 +68,12 @@ describe('Unit test user/User', function() {
       it('If password is undefined', function() {
         assert.throws(() => {
           new User(94, 'teste@teste.com', undefined);
+        }, Error, 'User must have a password');
+      });
+
+      it('If password an empty object', function() {
+        assert.throws(() => {
+          new User(94, 'teste@teste.com', {});
         }, Error, 'User must have a password');
       });
     });

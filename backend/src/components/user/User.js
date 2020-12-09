@@ -7,6 +7,9 @@ class User {
     this.password = password;
   }
 
+  /**
+   * @param {id} id
+   */
   set id(id) {
     if(!utils.isValidField(id)) throw new Error('User must have an id');
 
@@ -21,11 +24,7 @@ class User {
    * @param {string} email
    */
   set email(email) {
-    if(
-      email === undefined ||
-      email === null ||
-      email === ''
-    ) throw new Error('User must have an email');
+    if(!utils.isValidField(email)) throw new Error('User must have an email');
 
     this._email = email;
   }
@@ -38,11 +37,7 @@ class User {
    * @param {string} password
    */
   set password(password) {
-    if(
-      password === undefined ||
-      password === null ||
-      password === ''
-    ) throw new Error('User must have a password');
+    if(!utils.isValidField(password)) throw new Error('User must have a password');
 
     this._password = password;
   }
