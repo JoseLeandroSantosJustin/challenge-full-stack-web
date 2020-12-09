@@ -23,7 +23,7 @@ describe('Unit test user/utils', function() {
       });
 
       it('If the given parameter is an object', function() {
-        const field = '';
+        const field = {};
 
         assert.isFalse(utils.isValidField(field));
       });
