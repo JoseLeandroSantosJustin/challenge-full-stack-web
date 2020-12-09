@@ -3,12 +3,12 @@ const database = require('../database');
 const userDAL = require('./userDAL');
 const assert = require('chai').assert;
 
-describe('Unit testing user/UserDAL', function() {
+describe('Unit test user/UserDAL', function() {
   describe('When creating a new user', function() {
     describe('Should involke "execQuery" from MySQL', function() {
       describe('With connection, insert statement and given parameters', function() {
         describe('Then involke "endConnection" from MySQL', function() {
-          describe('And then return "execQuery" result', async function() {    
+          describe('And then return "execQuery" result', function() {    
             it('If working properly', async function() {          
               const email = 'teste@teste.com';
               const password = '12345678';
@@ -121,48 +121,100 @@ describe('Unit testing user/UserDAL', function() {
       describe('Should involke "execQuery" from MySQL', function() {
         describe('With connection, select statement and given parameters', function() {
           describe('Then involke "endConnection" from MySQL', function() {
-            describe('And then return "execQuery" result', function() {    
-              it('If working properly', async function() {          
-                const id = '123';
-                
-                sinon.stub(database, 'getConnection').returns('connection');
-                const mysqlMock = sinon.mock(database.MySQL);
-                const execQueryExpectation = mysqlMock.expects('execQuery')
-                  .withArgs(
-                    'connection',
-                    'SELECT * FROM user WHERE id = ?',
-                    [id])
-                  .resolves([{ id: 123, email: 'teste@teste.com'}]);
+            describe('And then return "execQuery" result', function() {
+              describe('If reading by id', function() {
+                it('And if working properly', async function() {          
+                  const id = '123';
+                  
+                  sinon.stub(database, 'getConnection').returns('connection');
+                  const mysqlMock = sinon.mock(database.MySQL);
+                  const execQueryExpectation = mysqlMock.expects('execQuery')
+                    .withArgs(
+                      'connection',
+                      'SELECT * FROM user WHERE id = ?',
+                      [id])
+                    .resolves([{ id: 123, email: 'teste@teste.com'}]);
 
-                const endConnectionExpectation = mysqlMock.expects('endConnection')
-                  .withArgs('connection')
-                  .returns();
+                  const endConnectionExpectation = mysqlMock.expects('endConnection')
+                    .withArgs('connection')
+                    .returns();
 
-                await userDAL.readUserById(id).then((result) => {
-                  sinon.restore();
-                  execQueryExpectation.verify();
-                  endConnectionExpectation.verify();
-                  assert.deepEqual(result, [{ id: 123, email: 'teste@teste.com'}]);
+                  await userDAL.readUserById(id).then((result) => {
+                    sinon.restore();
+                    execQueryExpectation.verify();
+                    endConnectionExpectation.verify();
+                    assert.deepEqual(result, [{ id: 123, email: 'teste@teste.com'}]);
+                  });
+                });
+
+                it('And if "execQuery" throws an error', async function() {
+                  const id = '123';
+                  
+                  sinon.stub(database, 'getConnection').returns('connection');
+                  const mysqlMock = sinon.mock(database.MySQL);
+                  const execQueryExpectation = mysqlMock.expects('execQuery')
+                    .withArgs(
+                      'connection',
+                      'SELECT * FROM user WHERE id = ?',
+                      [id])
+                    .rejects('Error caught');
+
+                  const endConnectionExpectation = mysqlMock.expects('endConnection')
+                    .withArgs('connection')
+                    .returns();
+
+                  await userDAL.readUserById(id).catch((error) => {
+                    sinon.restore();
+                    execQueryExpectation.verify();
+                    endConnectionExpectation.verify();
+                    assert.equal(error, 'Error caught');
+                  });
                 });
               });
 
-              it('If "execQuery" throws an error', async function() {
-                const id = '123';
+              describe('If reading by email', function() {
+                it('And if working properly', async function() {          
+                  const email = 'teste@teste.com';
+                  
+                  sinon.stub(database, 'getConnection').returns('connection');
+                  const mysqlMock = sinon.mock(database.MySQL);
+                  const execQueryExpectation = mysqlMock.expects('execQuery')
+                    .withArgs(
+                      'connection',
+                      'SELECT * FROM user WHERE email = ?',
+                      [email])
+                    .resolves([{ id: 123, email: 'teste@teste.com'}]);
+
+                  const endConnectionExpectation = mysqlMock.expects('endConnection')
+                    .withArgs('connection')
+                    .returns();
+
+                  await userDAL.readUserByEmail(email).then((result) => {
+                    sinon.restore();
+                    execQueryExpectation.verify();
+                    endConnectionExpectation.verify();
+                    assert.deepEqual(result, [{ id: 123, email: 'teste@teste.com'}]);
+                  });
+                });
+              });
+
+              it('And if "execQuery" throws an error', async function() {
+                const email = 'teste@teste.com';
                 
                 sinon.stub(database, 'getConnection').returns('connection');
                 const mysqlMock = sinon.mock(database.MySQL);
                 const execQueryExpectation = mysqlMock.expects('execQuery')
                   .withArgs(
                     'connection',
-                    'SELECT * FROM user WHERE id = ?',
-                    [id])
+                    'SELECT * FROM user WHERE email = ?',
+                    [email])
                   .rejects('Error caught');
 
                 const endConnectionExpectation = mysqlMock.expects('endConnection')
                   .withArgs('connection')
                   .returns();
 
-                await userDAL.readUserById(id).catch((error) => {
+                await userDAL.readUserByEmail(email).catch((error) => {
                   sinon.restore();
                   execQueryExpectation.verify();
                   endConnectionExpectation.verify();

@@ -1,5 +1,9 @@
 const database = require("../database");
 
+/**
+ * @param {string} email 
+ * @param {string} password 
+ */
 const createUser = (email, password) => {
   return new Promise((resolve, reject) => {
     const connection = database.getConnection();
@@ -35,6 +39,9 @@ const readAllUsers = () => {
   });
 }
 
+/**
+ * @param {number} id 
+ */
 const readUserById = (id) => {
   return new Promise((resolve, reject) => {
     const connection = database.getConnection();
@@ -53,6 +60,32 @@ const readUserById = (id) => {
   });
 }
 
+/**
+ * @param {string} email 
+ */
+const readUserByEmail = (email) => {
+  return new Promise((resolve, reject) => {
+    const connection = database.getConnection();
+
+    database.MySQL.execQuery(
+      connection,
+      'SELECT * FROM user WHERE email = ?',
+      [email]
+    ).then((result) => {
+      database.MySQL.endConnection(connection);
+      resolve(result);
+    }).catch((error) => {
+      database.MySQL.endConnection(connection);
+      reject(error);
+    });
+  });
+}
+
+/**
+ * @param {number} id 
+ * @param {string} email 
+ * @param {string} password 
+ */
 const updateUserById = (id, email, password) => {
   return new Promise((resolve, reject) => {
     if(
@@ -90,6 +123,9 @@ const updateUserById = (id, email, password) => {
   });
 }
 
+/**
+ * @param {number} id 
+ */
 const deleteUserById = (id) => {
   return new Promise((resolve, reject) => {
     const connection = database.getConnection();
@@ -112,6 +148,7 @@ module.exports = {
   createUser,
   readAllUsers,
   readUserById,
+  readUserByEmail,
   updateUserById,
   deleteUserById
 }
