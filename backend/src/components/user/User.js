@@ -14,9 +14,6 @@ class User {
       email === ''
     ) throw new Error('User must have an email');
 
-    if(email.search(/@{1}.*\./) < 0) 
-      throw new Error('User email needs to be at least one "@" and one "."');
-
     this._email = email;
   }
 
@@ -33,8 +30,6 @@ class User {
       password === null ||
       password === ''
     ) throw new Error('User must have a password');
-
-    if(password.length < 6) throw new Error('Password must be at least 6 characters');
 
     this._password = password;
   }
