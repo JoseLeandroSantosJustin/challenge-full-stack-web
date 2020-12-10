@@ -103,6 +103,7 @@ const updateUserById = (id, email, password) => {
     }
 
     if (password !== undefined) {
+      if(email !== undefined) query += ',';
       query += ' password = ?';
       options.push(password);
     }

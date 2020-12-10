@@ -301,7 +301,7 @@ describe('Unit test user/UserDAL', function() {
               const execQueryExpectation = mysqlMock.expects('execQuery')
                 .withArgs(
                   'connection',
-                  'UPDATE user SET email = ? password = ? WHERE id = ?',
+                  'UPDATE user SET email = ?, password = ? WHERE id = ?',
                   [email, password, id])
                 .resolves(true);
 
@@ -327,7 +327,7 @@ describe('Unit test user/UserDAL', function() {
               const execQueryExpectation = mysqlMock.expects('execQuery')
                 .withArgs(
                   'connection',
-                  'UPDATE user SET email = ? password = ? WHERE id = ?',
+                  'UPDATE user SET email = ?, password = ? WHERE id = ?',
                   [email, password, id])
                 .rejects('Error caught');
 
