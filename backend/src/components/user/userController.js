@@ -79,6 +79,8 @@ const readUserById = (id) => {
 
   return new Promise((resolve, reject) => {
     userDAL.readUserById(id).then((result) => {
+      if(result.length === 0) return resolve({});
+
       const user = new User(result[0].id, result[0].email, 'Password is hidden');
 
       resolve(user);
@@ -138,9 +140,11 @@ const updateUserById = (id, email, password) => {
   }
 
   return new Promise((resolve, reject) => {
-    userDAL.updateUserById(id, email, hasedPassword).then(() => {
-      userDAL.readUserById(id).then((result) => {
-        const user = new User(id, result[0].email, 'Password is hidden');
+    userDAL.updateUserById(id, email, hasedPassword).then((updateResult) => {
+      if(updateResult.affectedRows === 0) return resolve({});
+
+      userDAL.readUserById(id).then((readResult) => {
+        const user = new User(id, readResult[0].email, 'Password is hidden');
   
         resolve(user);
       }).catch((error) => {
@@ -167,12 +171,13 @@ const deleteUserById = (id) => {
   }
 
   return new Promise((resolve, reject) => {
-    userDAL.readUserById(id).then((result) => {
-      userDAL.deleteUserById(id).then((deleteResult) => {
-        if(deleteResult.affectedRows === 0)
-          throw new Error('Problems removing the user');
+    userDAL.readUserById(id).then((readResult) => {
+      if(Object.keys(readResult).length === 0 && readResult.constructor === Object) return resolve({});
 
-        const user = new User(result[0].id, result[0].email, 'Password is hidden');
+      userDAL.deleteUserById(id).then((deleteResult) => {
+        if(deleteResult.affectedRows === 0) return resolve({});
+
+        const user = new User(readResult[0].id, readResult[0].email, 'Password is hidden');
 
         resolve(user);
       }).catch((error) => {

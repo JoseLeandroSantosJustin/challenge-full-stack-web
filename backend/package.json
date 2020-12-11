@@ -20,7 +20,9 @@
     "sinon": "^9.2.1"
   },
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "config": "^3.3.3",
+    "joi": "^17.3.0",
     "mysql": "^2.18.1"
   }
 }

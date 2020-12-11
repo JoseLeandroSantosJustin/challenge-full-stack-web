@@ -221,7 +221,7 @@ describe('Unit test user/userController', function() {
 
     describe('Should involke "readUserById" from userDAL', function() {
       describe('Then return an user', function() {
-        it('If works properly', async function() {
+        it('If there is a user', async function() {
           const id = 94;
           const readUserByIdExpectation = sinon.mock(userDAL).expects('readUserById');
           readUserByIdExpectation.withArgs(id)
@@ -232,6 +232,21 @@ describe('Unit test user/userController', function() {
             assert.deepEqual(
               result,
               new User(94, 'teste@teste.com', 'Password is hidden')
+            );
+          });
+        });
+
+        it('If there is no user', async function() {
+          const id = 94;
+          const readUserByIdExpectation = sinon.mock(userDAL).expects('readUserById');
+          readUserByIdExpectation.withArgs(id)
+            .resolves([]);
+
+          await userController.readUserById(id).then((result) => {
+            readUserByIdExpectation.verify();
+            assert.deepEqual(
+              result,
+              {}
             );
           });
         });
@@ -384,23 +399,45 @@ describe('Unit test user/userController', function() {
     });
 
     describe('Should involke "updateUserById" from userDAL', function() {
-      it('If throws an error', async function() {
-        const id = 94;
-        const email = 'teste@teste.com';
-        const password = '12345678';
+      describe('Then return', function() {
+        it('Nothing if the is no user', async function() {
+          const id = 94;
+          const email = 'teste@teste.com';
+          const password = '12345678';
 
-        const hashPasswordExpectation = sinon.mock(utils).expects('hashPassword');
-        hashPasswordExpectation.withArgs(password)
-          .returns('hashedPassword');
+          const hashPasswordExpectation = sinon.mock(utils).expects('hashPassword');
+          hashPasswordExpectation.withArgs(password)
+            .returns('hashedPassword');
 
-        const createUserExpectation = sinon.mock(userDAL).expects('updateUserById');
-        createUserExpectation.withArgs(id, email, 'hashedPassword')
-          .rejects('Error caught');
+          const createUserExpectation = sinon.mock(userDAL).expects('updateUserById');
+          createUserExpectation.withArgs(id, email, 'hashedPassword')
+            .resolves({ affectedRows: 0 });
 
-        await userController.updateUserById(id, email, password).catch((error) => {
-          hashPasswordExpectation.verify();
-          createUserExpectation.verify();
-          assert.equal(error, 'Error caught');
+          await userController.updateUserById(id, email, password).then((result) => {
+            hashPasswordExpectation.verify();
+            createUserExpectation.verify();
+            assert.deepEqual(result, {});
+          });
+        });
+
+        it('An error if something goes wrong', async function() {
+          const id = 94;
+          const email = 'teste@teste.com';
+          const password = '12345678';
+  
+          const hashPasswordExpectation = sinon.mock(utils).expects('hashPassword');
+          hashPasswordExpectation.withArgs(password)
+            .returns('hashedPassword');
+  
+          const createUserExpectation = sinon.mock(userDAL).expects('updateUserById');
+          createUserExpectation.withArgs(id, email, 'hashedPassword')
+            .rejects('Error caught');
+  
+          await userController.updateUserById(id, email, password).catch((error) => {
+            hashPasswordExpectation.verify();
+            createUserExpectation.verify();
+            assert.equal(error, 'Error caught');
+          });
         });
       });
 
@@ -416,7 +453,7 @@ describe('Unit test user/userController', function() {
   
           const updateUserByIdExpectation = sinon.mock(userDAL).expects('updateUserById');
           updateUserByIdExpectation.withArgs(id, undefined, 'hashedPassword')
-            .resolves();
+            .resolves({ affectedRows: 1 });
 
           const readUserByIdExpectation = sinon.mock(userDAL).expects('readUserById');
           readUserByIdExpectation.withArgs(id)
@@ -439,7 +476,7 @@ describe('Unit test user/userController', function() {
   
           const updateUserByIdExpectation = sinon.mock(userDAL).expects('updateUserById');
           updateUserByIdExpectation.withArgs(id, email, undefined)
-            .resolves();
+            .resolves({ affectedRows: 1 });
 
           const readUserByIdExpectation = sinon.mock(userDAL).expects('readUserById');
           readUserByIdExpectation.withArgs(id)
@@ -466,7 +503,7 @@ describe('Unit test user/userController', function() {
   
           const updateUserByIdExpectation = sinon.mock(userDAL).expects('updateUserById');
           updateUserByIdExpectation.withArgs(id, email, 'hashedPassword')
-            .resolves();
+            .resolves({ affectedRows: 1 });
 
           const readUserByIdExpectation = sinon.mock(userDAL).expects('readUserById');
           readUserByIdExpectation.withArgs(id)
@@ -494,7 +531,7 @@ describe('Unit test user/userController', function() {
   
           const updateUserByIdExpectation = sinon.mock(userDAL).expects('updateUserById');
           updateUserByIdExpectation.withArgs(id, email, 'hashedPassword')
-            .resolves();
+            .resolves({ affectedRows: 1 });
 
           const readUserByIdExpectation = sinon.mock(userDAL).expects('readUserById');
           readUserByIdExpectation.withArgs(id)
@@ -541,6 +578,20 @@ describe('Unit test user/userController', function() {
     });
 
     describe('Should involke "readUserById" from userDAL', function() {
+      describe('And return an empty object', function() {
+        it('If there is no user', async function() {
+          const id = 94;
+
+          const readUserByIdExpectation = sinon.mock(userDAL).expects('readUserById');
+          readUserByIdExpectation.withArgs(id)
+            .resolves({});
+
+          await userController.deleteUserById(id).then((result) => {
+            assert.deepEqual(result, {});
+          });
+        });
+      });
+
       describe('And throws an error', function() {
         it('If throws an error', async function() {
           const id = 94;
@@ -558,7 +609,27 @@ describe('Unit test user/userController', function() {
     });
 
     describe('Should involke "deleteUserById" from userDAL', function() {
-      describe('Then return the romved user', function() {
+      describe('And return an empty object', function() {
+        it('If there is no user anymore', async function() {
+          const id = 94;
+
+          const readUserByIdExpectation = sinon.mock(userDAL).expects('readUserById');
+          readUserByIdExpectation.withArgs(id)
+            .resolves([{ id: 94, email: 'teste@teste.com' }]);
+
+          const deleteUserByIdExpectation = sinon.mock(userDAL).expects('deleteUserById');
+          deleteUserByIdExpectation.withArgs(id)
+            .resolves({ affectedRows: 0 });
+
+          await userController.deleteUserById(id).then((result) => {
+            readUserByIdExpectation.verify();
+            deleteUserByIdExpectation.verify();
+            assert.deepEqual(result, {});
+          });
+        });
+      });
+
+      describe('Then return the removed user', function() {
         it('If works properly', async function() {
           const id = 94;
 
