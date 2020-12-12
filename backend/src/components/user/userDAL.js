@@ -84,13 +84,13 @@ const readUserByEmail = (email) => {
 /**
  * @param {number} id 
  * @param {string} email 
- * @param {string} password 
+ * @param {string} userPassword 
  */
-const updateUserById = (id, email, password) => {
+const updateUserById = (id, email, userPassword) => {
   return new Promise((resolve, reject) => {
     if(
       email === undefined &&
-      password === undefined
+      userPassword === undefined
     ) throw new Error('"updateUserById" - No parameters are valid');
 
     const connection = database.getConnection();
@@ -102,10 +102,10 @@ const updateUserById = (id, email, password) => {
       options.push(email);
     }
 
-    if (password !== undefined) {
+    if (userPassword !== undefined) {
       if(email !== undefined) query += ',';
       query += ' password = ?';
-      options.push(password);
+      options.push(userPassword);
     }
 
     query += ' WHERE id = ?'

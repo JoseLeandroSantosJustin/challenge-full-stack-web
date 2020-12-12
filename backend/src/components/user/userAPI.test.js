@@ -470,7 +470,7 @@ describe('Unit test user/userAPI', function() {
             .delete('/94')
             .expect(400)
             .then((result) => {
-              updateUserByIdExpectation.verify();
+              deleteUserByIdExpectation.verify();
 
               assert.deepEqual(
                 result.body,
