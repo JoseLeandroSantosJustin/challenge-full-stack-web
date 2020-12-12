@@ -15,7 +15,7 @@ describe('Unit test database/utils', function() {
           mysqlConfig.password,
           mysqlConfig.database
         );
-        const connection = utils.getConnection();
+        utils.getConnection();
 
         mySQLExpectation.verify();
         mySQLMock.restore();
