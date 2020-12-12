@@ -4,5 +4,8 @@
     "user": "user",
     "password": "password",
     "database": "database"
+  },
+  "bcrypt": {
+    "salt": 10
   }
 }
