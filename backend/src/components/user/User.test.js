@@ -78,6 +78,15 @@ describe('Unit test user/User', function() {
       });
     });
 
+    describe('Should return the given id', function() {
+      it('If User was instatiated properly', function() {
+        const id = 94;
+        const user = new User(id, 'teste@teste.com', 'password');
+
+        assert.equal(user.id, id);
+      });
+    });
+
     describe('Should return the given email', function() {
       it('If User was instatiated properly', function() {
         const email = 'teste@teste.com';
