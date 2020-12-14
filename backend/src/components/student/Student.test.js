@@ -11,10 +11,14 @@ describe('Unit test student/Student', function() {
 
   describe('When to instantiate Student', function() {
     it('Should to set all parameter by the default set methods', function() {
+      const id = 94;
       const name = 'teste';
       const email = 'teste@teste.com';
       const ra = 'alu202000001';
       const cpf = cpfCheck.generate();
+
+      const idSetterStub = sinon.stub();
+      sinon.stub(Student.prototype, 'id').set(idSetterStub);
 
       const nameSetterStub = sinon.stub();
       sinon.stub(Student.prototype, 'name').set(nameSetterStub);
@@ -28,7 +32,8 @@ describe('Unit test student/Student', function() {
       const cpfSetterStub = sinon.stub();
       sinon.stub(Student.prototype, 'cpf').set(cpfSetterStub);
 
-      new Student(name, email, ra, cpf);
+      new Student(id, name, email, ra, cpf);
+      assert.isTrue(idSetterStub.called);
       assert.isTrue(nameSetterStub.called);
       assert.isTrue(emailSetterStub.called);
       assert.isTrue(raSetterStub.called);
@@ -36,10 +41,59 @@ describe('Unit test student/Student', function() {
     });
   });
 
+  describe('When to set the Stundent\'s id', function() {
+    describe('Should throws an error', function(){
+      it('If the given id fails "isValidField" from "./utils"', function() {
+        const student = new Student(
+          94,
+          'teste',
+          'teste@teste.com',
+          'alu202000001',
+          cpfCheck.generate()
+        );
+
+        const id = ''; // Any ID that fails isValidField
+        const isValidFieldExpectation = sinon.mock(utils)
+          .expects('isValidField')
+          .withArgs(id)
+          .returns(false);
+
+        assert.throws(() => {
+          student.id = id;
+        }, Error, 'Student must have an id');
+        isValidFieldExpectation.verify();
+      });
+    });
+
+    describe('Should be the given id ', function(){
+      it('If id pass "isValidField" from "./utils"', function() {
+        const student = new Student(
+          94,
+          'teste',
+          'teste@teste.com',
+          'alu202000001',
+          cpfCheck.generate()
+        );
+
+        const id = 94; // Any RA that pass isValidField
+        const isValidFieldExpectation = sinon.mock(utils)
+          .expects('isValidField')
+          .withArgs(id)
+          .returns(true);
+
+        student.id = id;
+
+        assert.equal(student.id, id);
+        isValidFieldExpectation.verify();
+      });
+    });
+  });
+
   describe('When to set the Stundent\'s name', function() {
     describe('Should be', function(){
       it('Undefined if the given name fails "isValidField" from "./utils"', function() {
         const student = new Student(
+          94,
           'teste',
           'teste@teste.com',
           'alu202000001',
@@ -60,6 +114,7 @@ describe('Unit test student/Student', function() {
 
       it('The given name if name pass "isValidField" from "./utils"', function() {
         const student = new Student(
+          94,
           'teste',
           'teste@teste.com',
           'alu202000001',
@@ -84,6 +139,7 @@ describe('Unit test student/Student', function() {
     describe('Should be', function(){
       it('Undefined if the given email fails "isValidField" from "./utils"', function() {
         const student = new Student(
+          94,
           'teste',
           'teste@teste.com',
           'alu202000001',
@@ -104,6 +160,7 @@ describe('Unit test student/Student', function() {
 
       it('The given email if email pass "isValidField" from "./utils"', function() {
         const student = new Student(
+          94,
           'teste',
           'teste@teste.com',
           'alu202000001',
@@ -128,6 +185,7 @@ describe('Unit test student/Student', function() {
     describe('Should throws an error', function(){
       it('If the given RA fails "isValidField" from "./utils"', function() {
         const student = new Student(
+          94,
           'teste',
           'teste@teste.com',
           'alu202000001',
@@ -150,6 +208,7 @@ describe('Unit test student/Student', function() {
     describe('Should be the given RA ', function(){
       it('If RA pass "isValidField" from "./utils"', function() {
         const student = new Student(
+          94,
           'teste',
           'teste@teste.com',
           'alu202000001',
@@ -174,6 +233,7 @@ describe('Unit test student/Student', function() {
     describe('Should throws an error', function(){
       it('If the given CPF fails "isValidField" from "./utils"', function() {
         const student = new Student(
+          94,
           'teste',
           'teste@teste.com',
           'alu202000001',
@@ -194,6 +254,7 @@ describe('Unit test student/Student', function() {
 
       it('If the given CPF fails "validate" from "cpf-check"', function() {
         const student = new Student(
+          94,
           'teste',
           'teste@teste.com',
           'alu202000001',
@@ -223,6 +284,7 @@ describe('Unit test student/Student', function() {
       describe('If CPF pass "isValidField" from "./utils"', function(){
         it('And also pass "validate" from "cpf-check"', function() {
           const student = new Student(
+            94,
             'teste',
             'teste@teste.com',
             'alu202000001',

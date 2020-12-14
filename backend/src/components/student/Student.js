@@ -3,16 +3,31 @@ const cpfCheck = require('cpf-check');
 
 class Student {
   /**
+   * @param {number} id
    * @param {string} name 
    * @param {string} email 
    * @param {string} ra 
    * @param {string} cpf 
    */
-  constructor(name, email, ra, cpf) {
+  constructor(id, name, email, ra, cpf) {
+    this.id = id;
     this.name = name;
     this.email = email;
     this.ra = ra;
     this.cpf = cpf;
+  }
+
+  /**
+   * @param {number} name
+   */
+  set id(id) {
+    if(!utils.isValidField(id)) throw new Error('Student must have an id');
+
+    this._id = id;
+  }
+
+  get id() {
+    return this._id;
   }
 
   /**
