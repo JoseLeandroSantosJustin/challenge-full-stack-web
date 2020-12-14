@@ -1,7 +1,7 @@
 const joi = require('joi');
 const { userService } = require('../user');
 const util = require('./utils');
-const loginService = require('./loginService');
+const utils = require('./utils');
 
 /**
  * @param {string} email 
@@ -14,7 +14,7 @@ const login = (email, password) => {
       joi.string()
         .min(3)
         .max(255)
-        .pattern(new RegExp('@{1}.*\.'))
+        .pattern(new RegExp('@{1}.*.'))
         .required()
     );
   
@@ -37,7 +37,7 @@ const login = (email, password) => {
       if(!util.comparePasswordToHash(password, result._password))
         return resolve({ message: 'Password does not match' });
 
-      const jwtToken = loginService.generateJWT();
+      const jwtToken = utils.generateJWT();
 
       resolve({ 
         message: 'Authenticated',

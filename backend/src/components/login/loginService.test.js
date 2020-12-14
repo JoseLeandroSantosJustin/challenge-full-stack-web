@@ -1,6 +1,5 @@
 const sinon = require('sinon');
-const jwt = require('jsonwebtoken');
-const config = require('config');
+const utils = require('./utils');
 const loginService = require('./loginService');
 const assert = require('chai').assert;
 
@@ -9,66 +8,64 @@ describe('Unit test login/loginService', function() {
     sinon.restore();
   });
 
-  describe('When involking "generateJWT"', function() {
-    describe('Should involke "sign" from jsonwebtoken', function() {
-      describe('With jwt.secret from config', function() {
-        it('Then return the generated JWT token', function() {
-          sinon.stub(Date, 'now').returns(0);
+  describe('When involking "authenticateRequest"', function() {
+    describe('Should invoke next parameter', function() {
+      it('If the given token pass in "isValidJWT" function', function() {
+        const req = { get: () => { return 'Bearer JWT' }};
+        const isValidJWTExpectation = sinon.mock(utils)
+          .expects('isValidJWT')
+          .withArgs('JWT')
+          .returns(true);
 
-          const signExpectation = sinon.mock(jwt)
-            .expects('sign')
-            .withArgs(
-              { exp: 3600 },
-              config.get('jwt').secret)
-            .returns('jsonWEBtoken');
+        const next = sinon.spy();
 
-          assert.equal(
-            loginService.generateJWT(),
-            'jsonWEBtoken'
-          );
-
-          signExpectation.verify();
-        });
+        loginService.authenticateRequest(req, 'res', next);
+        isValidJWTExpectation.verify();
+        assert.isTrue(next.called);
       });
     });
-  });
 
-  describe('When involking "isValidJWT"', function() {
-    describe('Should involke "verify" from jsonwebtoken', function() {
-      describe('With the given jwtToken and jwt.secret from config', function() {
-        describe('Then return the result', function() {
-          it('If the validation is valid', function() {
-            const jwtToken = 'jwtToken';
-            const verifyExpectation = sinon.mock(jwt)
-              .expects('verify')
-              .withArgs(
-                jwtToken,
-                config.get('jwt').secret)
-              .returns();
+    describe('Should set the end of the request', function() {
+      it('If the given token does not pass in "isValidJWT" function', function() {
+        const req = { get: () => { return 'Bearer JWT' }};
+        const isValidJWTExpectation = sinon.mock(utils)
+          .expects('isValidJWT')
+          .withArgs('JWT')
+          .returns(false);
 
-            assert.isTrue(
-              loginService.isValidJWT(jwtToken)
-            );
+        class Res {
+          status(){}
+          type(){}
+          send(){}
+          end(){}
+        }
 
-            verifyExpectation.verify();
-          });
+        const res = new Res();
+        res.status();
 
-          it('If the validation is not valid', function() {
-            const jwtToken = 'jwtToken';
-            const verifyExpectation = sinon.mock(jwt)
-              .expects('verify')
-              .withArgs(
-                jwtToken,
-                config.get('jwt').secret)
-              .throws(new Error('Something with token does not match'));
+        const resMock = sinon.mock(Res.prototype);
+        const statusExpectation = resMock.expects('status')
+          .withArgs(401)
+          .returnsThis();
 
-            assert.isFalse(
-              loginService.isValidJWT(jwtToken)
-            );
+        const typeExpectation = resMock.expects('type')
+          .withArgs('application/json')
+          .returnsThis();
 
-            verifyExpectation.verify();
-          });
-        });
+        const sendExpectation = resMock.expects('send')
+          .withArgs({ error: 'Authentication token failed, try again with another' })
+          .returnsThis();
+
+        const endExpectation = resMock.expects('end')
+          .withArgs()
+          .returnsThis();
+
+        loginService.authenticateRequest(req, res, 'next');
+        isValidJWTExpectation.verify();
+        statusExpectation.verify();
+        typeExpectation.verify();
+        sendExpectation.verify();
+        endExpectation.verify();
       });
     });
   });

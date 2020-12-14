@@ -3,7 +3,6 @@ const loginController = require('./loginController');
 const assert = require('chai').assert;
 const { userService } = require('../user');
 const utils = require('./utils');
-const loginService = require('./loginService');
 
 describe('Unit test login/loginController', function() {
   afterEach(function() {
@@ -149,12 +148,14 @@ describe('Unit test login/loginController', function() {
                 _password: 'hasedPassword'
               });
 
-            const comparePasswordToHashExpectation = sinon.mock(utils)
+            const utilsMock = sinon.mock(utils);
+
+            const comparePasswordToHashExpectation = utilsMock
               .expects('comparePasswordToHash')
               .withArgs(password, 'hasedPassword')
               .returns(true);
 
-            const loginServiceExpectation = sinon.mock(loginService)
+            const generateJWTExpectation = utilsMock
               .expects('generateJWT')
               .withArgs()
               .returns('jwtToken');
@@ -162,7 +163,7 @@ describe('Unit test login/loginController', function() {
             await loginController.login(email, password).then((result) => {
               readUserByEmailExpectation.verify();
               comparePasswordToHashExpectation.verify();
-              loginServiceExpectation.verify();
+              generateJWTExpectation.verify();
 
               assert.deepEqual(
                 result,

@@ -1,37 +1,23 @@
-const jwt = require('jsonwebtoken');
-const config = require('config');
+const utils = require('./utils');
 
 /**
- * Create a jwt using "sign" from jsonwebtoken
- * @returns {string} jwt token
+ * Express middleware
+ * Middleware to authenticate the user request
  */
-const generateJWT = () => {
-  return jwt.sign({
-      exp: Math.floor(Date.now() / 1000) + (60 * 60)
-    },
-    config.get('jwt').secret
-  );
-}
+const authenticateRequest = (req, res, next) => {
+  const authorizationHeader = String(req.get('Authorization'));
+  const tokenJWT = authorizationHeader.slice(authorizationHeader.indexOf(' ') + 1);
 
-/**
- * Check a jwt using "verify" from jsonwebtoken
- * @param {string} jwtToken 
- * @returns {boolean} result of validation
- */
-const isValidJWT = (jwtToken) => {
-  try {
-    jwt.verify(
-      jwtToken,
-      config.get('jwt').secret
-    );
-
-    return true
-  } catch(err) {
-    return false;
+  if (utils.isValidJWT(tokenJWT)) {
+    next();
+  } else {
+    res.status(401)
+      .type('application/json')
+      .send({ error: 'Authentication token failed, try again with another' })
+      .end();
   }
 }
 
 module.exports = {
-  generateJWT,
-  isValidJWT
+  authenticateRequest
 }
