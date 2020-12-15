@@ -1,11 +1,13 @@
 <template>
-  <v-app>
-    <router-view></router-view>
-  </v-app>
+  <h1>Student register</h1>
 </template>
 
 <script>
-
 export default {
-};
+
+}
 </script>
+
+<style>
+
+</style>

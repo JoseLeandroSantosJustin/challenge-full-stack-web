@@ -1,11 +1,16 @@
 <template>
-  <v-app>
+  <div>
+    <h1>Template</h1>
     <router-view></router-view>
-  </v-app>
+  </div>
 </template>
 
 <script>
-
 export default {
-};
+
+}
 </script>
+
+<style>
+
+</style>
