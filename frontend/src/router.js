@@ -23,7 +23,7 @@ export default new Router({
       ]
     },
     {
-      path: '/system',
+      path: '/websystem',
       component: WebsystemTemplate,
       children: [
         {

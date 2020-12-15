@@ -1,16 +1,16 @@
 <template>
-  <div>
-    <h1>Template</h1>
-    <router-view></router-view>
-  </div>
+  <v-app>
+    <NavigationDrawer />
+    <router-view></router-view>    
+  </v-app>
 </template>
 
 <script>
-export default {
+  import NavigationDrawer from './main/NavigationDrawer'
 
-}
+  export default {
+    components: {
+      NavigationDrawer
+    }
+  }
 </script>
-
-<style>
-
-</style>
