@@ -1,0 +1,17 @@
+version: "3.6"
+services:
+  database:
+    container_name: databasecontainer
+    image: edtech/database
+    build: ./database
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "rootpassword"
+      MYSQL_DATABASE: "ed_tech"
+      MYSQL_USER: "backend"
+      MYSQL_PASSWORD: "12345678"
+    volumes:
+      - ./database/data:/var/lib/mysql
+    ports:
+      - 3307:3306
