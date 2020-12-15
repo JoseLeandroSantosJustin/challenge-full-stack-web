@@ -6,6 +6,7 @@ const getConnection = () => {
 
   return MySQL.getPoolConnection(
     mysqlConfig.host,
+    mysqlConfig.port,
     mysqlConfig.user,
     mysqlConfig.password,
     mysqlConfig.database

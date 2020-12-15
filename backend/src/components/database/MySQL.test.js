@@ -8,6 +8,7 @@ describe('Unit test database/MySQL', function() {
     describe('Should use given parameters to involke "createPool"', function() {
       it('Then return the created connection', function() {
         const host = 'host';
+        const port = 'port';
         const user = 'user';
         const password = 'password';
         const database = 'database';
@@ -18,6 +19,7 @@ describe('Unit test database/MySQL', function() {
         mysqlMockExpectation.withArgs({
           connectionLimit : 10,
           host: host,
+          port: port,
           user: user,
           password: password,
           database: database
@@ -25,7 +27,7 @@ describe('Unit test database/MySQL', function() {
         mysqlMockExpectation.returns(result);
 
         assert.equal(
-          MySQL.getPoolConnection(host, user, password, database),
+          MySQL.getPoolConnection(host, port, user, password, database),
           result
         );
 

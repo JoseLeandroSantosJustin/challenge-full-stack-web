@@ -11,6 +11,7 @@ describe('Unit test database/utils', function() {
         const mysqlConfig = config.get('mysql');
         const mySQLExpectation = mySQLMock.expects('getPoolConnection').withArgs(
           mysqlConfig.host,
+          mysqlConfig.port,
           mysqlConfig.user,
           mysqlConfig.password,
           mysqlConfig.database

@@ -1,9 +1,10 @@
 {
   "mysql": {
-    "host": "host",
-    "user": "user",
-    "password": "password",
-    "database": "database"
+    "host": "database",
+    "port": "3306",
+    "user": "backend",
+    "password": "12345678",
+    "database": "ed_tech"
   },
   "bcrypt": {
     "salt": 10

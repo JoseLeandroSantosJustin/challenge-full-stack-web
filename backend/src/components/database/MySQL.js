@@ -6,15 +6,17 @@ const mysql = require('mysql');
 class MySQL {
   /**
    * @param {string} host 
+   * @param {string} port 
    * @param {string} user 
    * @param {string} password 
    * @param {string} database 
    * @returns {mysql.Pool}
    */
-  static getPoolConnection(host, user, password, database) {
+  static getPoolConnection(host, port, user, password, database) {
     return mysql.createPool({
       connectionLimit : 10,
       host: host,
+      port: port,
       user: user,
       password: password,
       database: database
