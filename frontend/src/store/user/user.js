@@ -25,6 +25,11 @@ export default {
     },
     setToken(state, token) {
       state.token = token
+    },
+    removeUserData(state) {
+      state.id = undefined
+      state.email = undefined
+      state.token = undefined
     }
   },
   actions: {
@@ -36,6 +41,9 @@ export default {
     },
     setToken(context, token) {
       context.commit('setToken', token)
+    },
+    removeUserData(context) {
+      context.commit('removeUserData')
     }
   }
 }

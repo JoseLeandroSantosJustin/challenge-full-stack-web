@@ -23,6 +23,8 @@
 
         this.$router.push('/login')
       }
+
+      this.$store.dispatch('navigationdrawer/setVisibility', false)
     }
   }
 </script>

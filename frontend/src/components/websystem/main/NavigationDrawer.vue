@@ -16,6 +16,12 @@
             <v-list-item-title>Alunos</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        <v-list-item @click="logout">
+          <v-list-item-content>
+            <v-list-item-title>Sair</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list-item-group>
     </v-list>
   </v-navigation-drawer>
@@ -32,7 +38,20 @@ export default {
 			set(value) {
 				this.$store.dispatch('appbar/switchIconState', !value)
 			}		
-		}
-	}
+    },
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('user/removeUserData')
+
+      this.$store.dispatch('alert/setAlert', {
+        show: true,
+        type: 'success',
+        message: 'Você foi desconectado'
+      });
+
+      this.$router.push('/login');
+    }
+  }
 }
 </script>
