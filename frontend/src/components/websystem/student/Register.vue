@@ -9,8 +9,7 @@
             label="Nome"
             placeholder="Informe o nome completo"
             v-model="name"
-            :rules="nameRules"
-            required></v-text-field>
+            :rules="nameRules"></v-text-field>
         </v-row>
         <v-row>
           <v-text-field
@@ -18,8 +17,7 @@
             label="E-mail"
             placeholder="Informe apenas um e-mail"
             v-model="email"
-            :rules="emailRules"
-            required></v-text-field>
+            :rules="emailRules"></v-text-field>
         </v-row>
         <v-row>
           <v-text-field
@@ -83,14 +81,22 @@
         alert: { show: false, type: 'info', message: '' },
         showLoading: false,
         nameRules: [
-          name => !!name || 'Nome precisa ser informado',
-          name => (name || '').length > 3 || 'Nome completo precisa ser informado',
+          name => {
+            if(name !== '') {
+              return (name || '').length > 3 || 'Informe o nome completo'
+            } else {
+              return true
+            }
+          }
         ],
         emailRules: [
-          email => !!email || 'E-mail precisa ser informado',
           email => {
-            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            return pattern.test(email) || 'E-mail informado é inválido'
+            if(email !== '') {
+              const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+              return pattern.test(email) || 'E-mail informado é inválido'
+            } else {
+              return true
+            }
           }
         ],
         raRules: [

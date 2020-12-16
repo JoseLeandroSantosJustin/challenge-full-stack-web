@@ -9,8 +9,7 @@
             label="Nome"
             placeholder="Informe o nome completo"
             :rules="nameRules"
-            v-model="student.name"
-            required></v-text-field>
+            v-model="name"></v-text-field>
         </v-row>
         <v-row>
           <v-text-field
@@ -18,14 +17,13 @@
             label="E-mail"
             placeholder="Informe apenas um e-mail"
             :rules="emailRules"
-            v-model="student.email"
-            required></v-text-field>
+            v-model="email"></v-text-field>
         </v-row>
         <v-row>
           <v-text-field
             class="mt-4"
             label="RA"
-            :value="student.ra"
+            :value="ra"
             disabled></v-text-field>
         </v-row>
         <v-row>
@@ -33,8 +31,7 @@
             class="mt-4"
             label="CPF"
             placeholder="Informe o número do documento"
-            :rules="cpfRules"
-            v-model="student.cpf"
+            :value="cpf"
             disabled></v-text-field>
         </v-row>
 
@@ -80,28 +77,30 @@
     },
     data() {
       return {
+        name: '',
+        email: '',
+        ra: '',
+        cpf: '',
         alert: { show: false, type: 'info', message: '' },
         showLoading: false,
-        student: {
-            id: this.id,
-            name: '',
-            email: '',
-            ra: '',
-            cpf: '',
-          },
         nameRules: [
-          name => !!name || 'Nome precisa ser informado',
-          name => (name || '').length > 3 || 'Nome completo precisa ser informado',
-        ],
-        emailRules: [
-          email => !!email || 'E-mail precisa ser informado',
-          email => {
-            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            return pattern.test(email) || 'E-mail informado é inválido'
+          name => {
+            if(name !== '') {
+              return (name || '').length > 3 || 'Informe o nome completo'
+            } else {
+              return true
+            }
           }
         ],
-        cpfRules: [
-          cpf => !!cpf || 'CPF precisa ser informado'
+        emailRules: [
+          email => {
+            if(email !== '') {
+              const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+              return pattern.test(email) || 'E-mail informado é inválido'
+            } else {
+              return true
+            }
+          }
         ]
       }
     },
@@ -109,47 +108,19 @@
       this.getStudent()
     },
     methods: {
-      checksCPF(inputCPF) {
-        if(inputCPF != undefined){
-          var soma = 0;
-          var i;
-          var resto;
-          var cpf = inputCPF;
-
-          if (cpf == "00000000000") return false;
-
-          for (i = 1; i <= 9; i++)
-            soma = soma + parseInt(cpf.substring(i - 1, i)) * (11 - i);
-            resto = (soma * 10) % 11;
-
-          if (resto == 10 || resto == 11) resto = 0;
-
-          if (resto != parseInt(cpf.substring(9, 10))) return false;
-
-          soma = 0;
-          for (i = 1; i <= 10; i++)
-            soma = soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
-            resto = (soma * 10) % 11;
-
-          if (resto == 10 || resto == 11) resto = 0;
-
-          if (resto != parseInt(cpf.substring(10, 11))) return false;
-          return true;
-        }
-      },
       getStudent() {
         this.$http.get(
-          `/students/${this.student.id}`,
+          `/students/${this.id}`,
           { 
             headers: {
               'Authorization': this.$store.getters['user/getToken']
             }
           }
         ).then(response => {
-          this.student.name = response.data._name
-          this.student.email = response.data._email
-          this.student.ra = response.data._ra
-          this.student.cpf = response.data._cpf
+          this.name = response.data._name === undefined ? '' : response.data._name
+          this.email = response.data._email === undefined ? '' : response.data._email
+          this.ra = response.data._ra
+          this.cpf = response.data._cpf
         }).catch(() => {
           this.alert.show = true
           this.alert.type = 'error'
@@ -162,10 +133,10 @@
           this.showLoading = !this.showLoading
 
           this.$http.put(
-            `/students/${this.student.id}`,
+            `/students/${this.id}`,
             {
-              name: this.student.name,
-              email: this.student.email
+              name: this.name,
+              email: this.email
             },
             {
               headers: {
