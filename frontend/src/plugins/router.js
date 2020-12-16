@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import WebsiteTemplate from './components/website/Template'
-import Login from './components/website/login/Login'
-import WebsystemTemplate from './components/websystem/Template'
-import StudentList from './components/websystem/student/List'
-import StudentRegister from './components/websystem/student/Register'
-import StudentUpdate from './components/websystem/student/Update'
+import WebsiteTemplate from '@/components/website/Template'
+import Login from '@/components/website/login/Login'
+import WebsystemTemplate from '@/components/websystem/Template'
+import StudentList from '@/components/websystem/student/List'
+import StudentRegister from '@/components/websystem/student/Register'
+import StudentUpdate from '@/components/websystem/student/Update'
 
 Vue.use(Router);
 
