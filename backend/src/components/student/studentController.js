@@ -59,7 +59,7 @@ const createStudent = (name, email, ra, cpf) => {
   }
 
   return new Promise((resolve, reject) => {
-    studentDAL.createStudent(name, email, ra, cpf).then((result) => {
+    studentDAL.createStudent(name, email, ra, cpfCheck.strip(cpf)).then((result) => {
       const student = new Student(result.insertId, name, email, ra, cpf);
 
       resolve(student);

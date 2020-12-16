@@ -116,7 +116,6 @@ router.put('/:id', function (req, res) {
         .end()
     });
   } catch (err) {
-    console.log(err.message);
     res.status(400)
       .type('application/json')
       .send({ error: err.message })
