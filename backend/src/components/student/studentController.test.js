@@ -215,10 +215,10 @@ describe('Unit test student/userController', function() {
             const cpf = cpfCheck.generate();
 
             const createStudentExpectation = sinon.mock(studentDAL).expects('createStudent');
-            createStudentExpectation.withArgs(name, undefined, ra, cpf)
+            createStudentExpectation.withArgs(name, '', ra, cpf)
               .resolves({ insertId: 94 });
 
-            await studentController.createStudent(name, undefined, ra, cpf).then((result) => {
+            await studentController.createStudent(name, '', ra, cpf).then((result) => {
               createStudentExpectation.verify();
               assert.deepEqual(
                 result,
@@ -233,14 +233,14 @@ describe('Unit test student/userController', function() {
             const cpf = cpfCheck.generate();
 
             const createStudentExpectation = sinon.mock(studentDAL).expects('createStudent');
-            createStudentExpectation.withArgs(undefined, email, ra, cpf)
+            createStudentExpectation.withArgs('', email, ra, cpf)
               .resolves({ insertId: 94 });
 
-            await studentController.createStudent(undefined, email, ra, cpf).then((result) => {
+            await studentController.createStudent('', email, ra, cpf).then((result) => {
               createStudentExpectation.verify();
               assert.deepEqual(
                 result,
-                new Student(94, undefined, email, ra, cpf)
+                new Student(94, '', email, ra, cpf)
               );
             });
           });
@@ -565,7 +565,7 @@ describe('Unit test student/userController', function() {
           const cpf = cpfCheck.generate();
   
           const updateStudentByIdExpectation = sinon.mock(studentDAL).expects('updateStudentById');
-          updateStudentByIdExpectation.withArgs(id, name, undefined)
+          updateStudentByIdExpectation.withArgs(id, name, '')
             .resolves({ affectedRows: 1 });
 
           const readStudentByIdExpectation = sinon.mock(studentDAL).expects('readStudentById');
@@ -578,7 +578,7 @@ describe('Unit test student/userController', function() {
               cpf: cpf
             }]);
   
-          await studentController.updateStudentById(id, name, undefined).then((result) => {
+          await studentController.updateStudentById(id, name, '').then((result) => {
             updateStudentByIdExpectation.verify();
             readStudentByIdExpectation.verify();
             assert.deepEqual(
@@ -596,7 +596,7 @@ describe('Unit test student/userController', function() {
           const cpf = cpfCheck.generate();
   
           const updateStudentByIdExpectation = sinon.mock(studentDAL).expects('updateStudentById');
-          updateStudentByIdExpectation.withArgs(id, undefined, email)
+          updateStudentByIdExpectation.withArgs(id, '', email)
             .resolves({ affectedRows: 1 });
 
           const readStudentByIdExpectation = sinon.mock(studentDAL).expects('readStudentById');
@@ -609,7 +609,7 @@ describe('Unit test student/userController', function() {
               cpf: cpf
             }]);
   
-          await studentController.updateStudentById(id, undefined, email).then((result) => {
+          await studentController.updateStudentById(id, '', email).then((result) => {
             updateStudentByIdExpectation.verify();
             readStudentByIdExpectation.verify();
             assert.deepEqual(

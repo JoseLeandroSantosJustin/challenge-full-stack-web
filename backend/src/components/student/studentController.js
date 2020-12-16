@@ -39,7 +39,7 @@ const createStudent = (name, email, ra, cpf) => {
       throw new Error(error.details[0].message);
     }
   } else {
-    name = undefined;
+    name = '';
   }
 
   if(utils.isValidField(email)) {
@@ -55,7 +55,7 @@ const createStudent = (name, email, ra, cpf) => {
       throw new Error(error.details[0].message);
     }
   } else {
-    email = undefined;
+    email = '';
   }
 
   return new Promise((resolve, reject) => {
@@ -153,7 +153,7 @@ const updateStudentById = (id, name, email) => {
       throw new Error(error.details[0].message);
     }
   } else {
-    name = undefined;
+    name = '';
   }
 
   if(utils.isValidField(email)) {
@@ -170,7 +170,7 @@ const updateStudentById = (id, name, email) => {
       throw new Error(error.details[0].message);
     }
   } else {
-    email = undefined;
+    email = '';
   }
 
   return new Promise((resolve, reject) => {

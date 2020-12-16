@@ -196,14 +196,6 @@ describe('Unit test student/studentDAL', function() {
   });
 
   describe('When updating an student', function() {
-    describe('Should thrown an error', function() {
-      it('If parameters name and email are undefined', async function() {
-        await studentDAL.updateStudentById(1, undefined, undefined).catch((error) => {
-          assert.deepEqual(error.message, '"updateStudentById" - No parameters are valid');
-        });
-      });
-    });
-
     describe('Should invoke "execQuery" from MySQL', function() {
       describe('With connection, query and given parameters', function() {
         describe('Then involke "endConnection" from MySQL', function() {

@@ -69,11 +69,6 @@ const readStudentById = (id) => {
  */
 const updateStudentById = (id, name, email) => {
   return new Promise((resolve, reject) => {
-    if(
-      name === undefined &&
-      email === undefined
-    ) throw new Error('"updateStudentById" - No parameters are valid');
-
     const connection = database.getConnection();
     let query = 'UPDATE student SET';
     let options = [];
