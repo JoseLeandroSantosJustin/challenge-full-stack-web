@@ -25,7 +25,6 @@ export default {
   },
   actions: {
     setAlert(context, { show, type, message }) {
-      console.log(show, type, message);
       context.commit('setShow', show);
       context.commit('setType', type);
       context.commit('setMessage', message);

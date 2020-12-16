@@ -40,8 +40,8 @@
 
         <v-btn
           color="error"
-          @click="dialog = false"
-          small>Remover</v-btn>
+          @click="removeStudent"
+          small>Confirmar</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -49,16 +49,48 @@
 
 <script>
   export default {
-  props: {
-		student: {
-			type: Object,
-			required: true
-		}
-	},
+    props: {
+      student: {
+        type: Object,
+        required: true
+      },
+      onDeleteStudent: { required: true }
+    },
     data () {
       return {
         item: 0,
         dialog: false,
+        alert: {}
+      }
+    },
+    methods: {
+      removeStudent() {
+        this.$http.delete(
+          `/students/${this.student.id}`,
+          { 
+            headers: {
+              'Authorization': this.$store.getters['user/getToken']
+            }
+          }
+        ).then(() => {
+          const alert = {
+            show: true,
+            type: 'success',
+            message: 'Estudante removido com sucesso'
+          };
+
+          this.onDeleteStudent(alert)
+          this.dialog = false
+        }).catch(() => {
+          const alert = {
+            show: true,
+            type: 'error',
+            message: 'Não foi possivel excluir o estudante. Por favor comunique o administrador'
+          };
+
+          this.onDeleteStudent(alert)
+          this.dialog = false
+        });
       }
     }
   }
