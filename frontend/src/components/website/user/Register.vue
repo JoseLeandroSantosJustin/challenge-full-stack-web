@@ -6,7 +6,7 @@
     class="ma-16">
   
     <v-card-title
-      class="blue darken-3 white--text">Login</v-card-title>
+      class="blue darken-3 white--text">Cadastro de usuário</v-card-title>
 
     <v-card-text>
       <v-form
@@ -22,28 +22,41 @@
         <v-text-field
           class="mt-2"
           label="Senha"
-          v-model="password"
-          :rules="passwordRules"
+          v-model="password1"
+          :rules="password1Rules"
           :type="showPassword ? 'text' : 'password'"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append="showPassword = !showPassword"
           counter
           required></v-text-field>
 
-        <v-container class="ma-0 pl-0 pa-0">
-          Não é cadastrado? <a href="#" class="text-decoration-none" @click="goToUserRegister">Cadastre-se</a>
-        </v-container>
+        <v-text-field
+          class="mt-2"
+          label="Confirmar senha"
+          v-model="password2"
+          :rules="password2Rules"
+          :type="showPassword ? 'text' : 'password'"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          @click:append="showPassword = !showPassword"
+          counter
+          required></v-text-field>
 
         <v-alert
-          class="mt-2"
+          class="mt-2 mb-0"
           :value="alert.show"
           :type="alert.type">
           {{ alert.message }}
         </v-alert>
 
         <v-btn
-          color="error"
+          color="info"
           class="mt-4"
+          :loading="showLoading"
+          to="/login">Voltar</v-btn>
+
+        <v-btn
+          color="error"
+          class="ml-2 mt-4"
           :loading="showLoading"
           @click="resetForm">Limpar</v-btn>
 
@@ -51,7 +64,7 @@
           color="success"
           class="ml-2 mt-4"
           :loading="showLoading"
-          @click="login">Login</v-btn>
+          @click="postUser">Cadastrar</v-btn>
 
       </v-form>
     </v-card-text>
@@ -63,7 +76,8 @@
     data() {
       return {
         email: '',
-        password: '',
+        password1: '',
+        password2: '',
         showLoading: false,
         showPassword: false,
         alert: { show: false, type: 'info', message: '' },
@@ -74,44 +88,41 @@
             return pattern.test(email) || 'E-mail informado é inválido'
           }
         ],
-        passwordRules: [
-          password => !!password || 'A senha precisa ser informada'
+        password1Rules: [
+          password => !!password || 'A senha precisa ser informada',
+          password => (password || '').length > 5 || 'A senha precisa ter mais de 5 caracteres',
         ],
+        password2Rules: [
+          password => !!password || 'É necessário confirmar a senha',
+          password => password === this.password1 || 'As senhas precisam ser iguas'
+        ]
       }
-    },
-    mounted() {
-      this.alert = this.$store.getters['alert/getAlert']
-      setTimeout(() => { this.alert.show = false }, 3000)
     },
     methods: {
       resetForm () {
         this.$refs.form.reset()
       },
-      login() {
+      postUser() {
         if (this.$refs.form.validate()){
           this.showLoading = true;
 
           this.$http.post(
-            '/login',
+            '/users',
             {
               email: this.email,
-              password: this.password
+              password: this.password1
             }
-          ).then((result) => {
-            if (result.data.message === "Authenticated") {
-              this.alert.show = false;
-              this.showLoading = !this.showLoading
-              this.$store.dispatch('user/setId', result.data.user._id)
-              this.$store.dispatch('user/setEmail', result.data.user._email)
-              this.$store.dispatch('user/setToken', result.data.token)
-              this.goToHome()
-            } else {
-              this.alert.show = true;
-              this.alert.type = 'warning'
-              this.alert.message = result.data.message
-              setTimeout(() => { this.alert.show = false }, 3000)
-              this.showLoading = !this.showLoading
-            }
+          ).then(() => {
+            this.alert.show = false;
+            this.showLoading = !this.showLoading
+
+            this.$store.dispatch('alert/setAlert', {
+              show: true,
+              type: 'success',
+              message: 'Usuário cadastrado com sucesso, agora é só acessar'
+            });
+
+            this.goToLogin()
           }).catch((error) => {
             this.alert.show = true;
             this.alert.type = 'error'
@@ -121,12 +132,8 @@
           });
         }
       },
-      goToHome() {
-        this.$router.push('/websystem/students-list')
-      },
-      goToUserRegister(e) {
-        e.preventDefault();
-        this.$router.push('/users')
+      goToLogin() {
+        this.$router.push('/login')
       }
     }
   }

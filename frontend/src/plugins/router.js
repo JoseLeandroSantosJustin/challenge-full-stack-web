@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import WebsiteTemplate from '@/components/website/Template'
 import Login from '@/components/website/login/Login'
+import UserRegister from '@/components/website/user/Register'
 import WebsystemTemplate from '@/components/websystem/Template'
 import StudentList from '@/components/websystem/student/List'
 import StudentRegister from '@/components/websystem/student/Register'
@@ -20,6 +21,10 @@ export default new Router({
         {
           path: 'login',
           component: Login
+        },
+        {
+          path: 'users',
+          component: UserRegister
         }
       ]
     },
