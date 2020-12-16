@@ -11,7 +11,7 @@
 
     <v-list class="pa-0">
       <v-list-item-group>
-        <v-list-item to="/websystem/students">
+        <v-list-item to="/websystem/students-list">
           <v-list-item-content>
             <v-list-item-title>Alunos</v-list-item-title>
           </v-list-item-content>

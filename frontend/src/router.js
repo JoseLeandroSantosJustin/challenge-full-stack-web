@@ -27,8 +27,12 @@ export default new Router({
       component: WebsystemTemplate,
       children: [
         {
-          path: 'students',
+          path: 'students-list',
           component: StudentList
+        },
+        {
+          path: 'students',
+          component: StudentRegister
         },
         {
           path: 'students/:id',
