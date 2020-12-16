@@ -67,15 +67,6 @@
           },
         ]
       }
-    },
-    methods: {
-      toStudentUpdate(item) {
-        this.$router.push(`/websystem/students/${item.id}`)
-      },
     }
   }
 </script>
-
-<style>
-
-</style>

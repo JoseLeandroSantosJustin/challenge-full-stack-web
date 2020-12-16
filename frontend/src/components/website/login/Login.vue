@@ -61,11 +61,7 @@
         password: '',
         showLoading: false,
         showPassword: false,
-        alert: {
-          show: false,
-          type: 'info',
-          message: ''
-        },
+        alert: {},
         emailRules: [
           email => !!email || 'E-mail precisa ser informado',
           email => {
@@ -77,6 +73,10 @@
           password => !!password || 'A senha precisa ser informada'
         ],
       }
+    },
+    mounted() {
+      this.alert = this.$store.getters['alert/getAlert']
+      setTimeout(() => { this.alert.show = false }, 3000)
     },
     methods: {
       resetForm () {
@@ -103,13 +103,15 @@
             } else {
               this.alert.show = true;
               this.alert.type = 'warning'
-              this.alert.message = `Atenção: ${result.data.message}`
+              this.alert.message = result.data.message
+              setTimeout(() => { this.alert.show = false }, 3000)
               this.showLoading = !this.showLoading
             }
           }).catch((error) => {
             this.alert.show = true;
             this.alert.type = 'error'
-            this.alert.message = `Ocorreu um erro: ${error.message}`
+            this.alert.message = error.message
+            setTimeout(() => { this.alert.show = false }, 3000)
             this.showLoading = !this.showLoading
           });
         }
