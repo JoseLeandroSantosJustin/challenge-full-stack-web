@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer app>
+  <v-navigation-drawer v-model="drawer" app>
     <v-card elevation="0" tile>
       <v-card-title 
         class="text-center font-weight-black blue darken-3 white--text pa-2">
@@ -20,3 +20,19 @@
     </v-list>
   </v-navigation-drawer>
 </template>
+
+<script>
+export default {
+	computed: {
+		drawer: {
+			get() {
+				return this.$store.getters['navigationdrawer/isVisible']
+			},
+
+			set(value) {
+				this.$store.dispatch('appbar/switchIconState', !value)
+			}		
+		}
+	}
+}
+</script>
