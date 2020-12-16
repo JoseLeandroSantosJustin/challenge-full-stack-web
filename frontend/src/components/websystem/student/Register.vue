@@ -79,7 +79,7 @@
         email: '',
         ra: '',
         cpf: '',
-        alert: {},
+        alert: { show: false, type: 'info', message: '' },
         showLoading: false,
         nameRules: [
           name => !!name || 'Nome precisa ser informado',
