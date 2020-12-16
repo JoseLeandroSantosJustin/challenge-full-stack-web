@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="application-body">
     <NavigationDrawer />
     <router-view></router-view>    
   </v-app>
@@ -28,3 +28,10 @@
     }
   }
 </script>
+
+<style scoped>
+  .application-body {
+    min-width: 410px;
+    height: 100%;
+  }
+</style>
