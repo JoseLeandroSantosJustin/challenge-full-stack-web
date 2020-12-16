@@ -6,6 +6,7 @@ import Login from './components/website/login/Login'
 import WebsystemTemplate from './components/websystem/Template'
 import StudentList from './components/websystem/student/List'
 import StudentRegister from './components/websystem/student/Register'
+import StudentUpdate from './components/websystem/student/Update'
 
 Vue.use(Router);
 
@@ -36,7 +37,7 @@ export default new Router({
         },
         {
           path: 'students/:id',
-          component: StudentRegister,
+          component: StudentUpdate,
           props: true
         }
       ]
