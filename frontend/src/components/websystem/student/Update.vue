@@ -39,6 +39,7 @@
         </v-row>
 
         <v-alert
+          class="mx-n3"
           :value="alert.show"
           :type="alert.type">
           {{ alert.message }}
@@ -48,10 +49,10 @@
           <v-spacer></v-spacer>
 
           <v-btn
-            color="warning"
+            color="info"
             class="mt-4"
             to="/websystem/students-list"
-            :loading="showLoading">Cancelar</v-btn>
+            :loading="showLoading">Voltar</v-btn>
 
           <v-btn
             color="success"
@@ -180,7 +181,7 @@
           }).catch((error) => {
             this.alert.show = true
             this.alert.type = 'error'
-            this.alert.message = error.message
+            this.alert.message = error.response.data.error
             this.showLoading = !this.showLoading
             setTimeout(() => { this.alert.show = false }, 3000)
           });
