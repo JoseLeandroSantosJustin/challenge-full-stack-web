@@ -17,6 +17,7 @@ export default new Router({
     {
       path: '/',
       component: WebsiteTemplate,
+      redirect: '/login',
       children: [
         {
           path: 'login',
@@ -31,6 +32,7 @@ export default new Router({
     {
       path: '/websystem',
       component: WebsystemTemplate,
+      redirect: '/students-list',
       children: [
         {
           path: 'students-list',
