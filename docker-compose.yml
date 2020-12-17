@@ -22,3 +22,10 @@ services:
       - ./database/data:/var/lib/mysql
     ports:
       - 3307:3306
+  frontend:
+    container_name: frontendcontainer
+    image: edtech/frontend
+    restart: always
+    build: ./frontend
+    ports:
+      - 80:80
